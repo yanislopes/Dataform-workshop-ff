@@ -18,10 +18,10 @@ Workshop Dataform - French Fragrance Analytics Pipeline
 - Dataform CLI (npm install -g @dataform/cli)
 
 ## Setup & Hello World
-**Option 1 : Suivre le workshop pas à pas** (recommandé)
+**Option 1 : Suivre le workshop pas à pas**
 - Suivez les instructions ci-dessous
 
-**Option 2 : Cloner le projet terminé** (pour référence)
+**Option 2 : Cloner le projet terminé**
 ```bash
 git clone https://github.com/yanislopes/Dataform-workshop-ff.git
 cd Dataform-workshop-ff
