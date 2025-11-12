@@ -1,0 +1,11 @@
+config {
+    type: "table",
+    database: "dataform-workshop-ff",
+    schema: "congrat_data",
+    description: "French Fragrance Hello World",
+    tags: ["hello_world"],
+    dependencies: ["stage_hello_world"]
+}
+
+SELECT *
+FROM ${ref("stage_congrat_data", "stage_hello_world")}

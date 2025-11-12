@@ -1,0 +1,17 @@
+config {
+    type: "table",
+    database: "dataform-workshop-ff",
+    schema: "stage_congrat_data",
+    name: "stage_hello_world",
+    description: "Temp French Fragrance Hello World",
+    tags: ["hello_world"]
+}
+
+SELECT 
+  fragrance_id,
+  brand_name,
+  name,
+  price_eur,
+  'Made in Paris, France' as origin,
+  CURRENT_TIMESTAMP() as technical_date
+FROM ${ref("raw_data", "hello_world")}
