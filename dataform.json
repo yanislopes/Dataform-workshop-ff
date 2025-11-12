@@ -1,0 +1,7 @@
+{
+  "warehouse": "bigquery",
+  "defaultDatabase": "dataform-workshop-ff",
+  "defaultSchema": "french_fragrance",
+  "assertionSchema": "dataform_assertions",
+  "defaultLocation": "EU"
+}

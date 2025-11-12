@@ -1,3 +1,7 @@
+# Dataform
+node_modules/
+.df-credentials.json
+
 # Logs
 logs
 *.log
