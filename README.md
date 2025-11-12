@@ -152,7 +152,7 @@ EOF
 # Installer les dépendances
 npm install
 ```
-PS : Le champ `"name"` dans package.json est l'identifiant npm du projet (vous pouvez le changer). On peur le voir avec la commande: npm list
+PS : Le champ `"name"` dans package.json est l'identifiant npm du projet (vous pouvez le changer). On peut le voir avec la commande: npm list
 
 ### Step 4 : Créer le dataset source
 ```bash
