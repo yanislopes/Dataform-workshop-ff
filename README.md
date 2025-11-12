@@ -11,14 +11,22 @@ Workshop Dataform - French Fragrance Analytics Pipeline
 ## Prérequis
 
 - Compte Google Cloud Platform
-- Compte Github (Pas Obligatoire)
 - Éditeur de code
-- Git
+- Git (Si besoin de cloner ce repo seulement)
 - Gcloud CLI
 - Node.js et npm
 - Dataform CLI (npm install -g @dataform/cli)
 
 ## Setup & Hello World
+**Option 1 : Suivre le workshop pas à pas** (recommandé)
+- Suivez les instructions ci-dessous
+
+**Option 2 : Cloner le projet terminé** (pour référence)
+```bash
+git clone https://github.com/yanislopes/Dataform-workshop-ff.git
+cd Dataform-workshop-ff
+npm install
+```
 
 ### Step 1: Installer Dataform en local
 #### **macOS**
@@ -79,7 +87,7 @@ gcloud config set project VOTRE_PROJECT_ID
 **Activer les APIs via l'interface :**
 1. Aller dans la console GCP
 2. **Vérifier que vous êtes dans le bon projet**
-3. Dans la **barre de recherche**, taper : `Dataform` et selectionner dataform marketplace
+3. Dans la **barre de recherche**, taper : `Dataform` et sélectionner dataform marketplace
 4. Activer l'API
 
 **OU via CLI :**
@@ -94,19 +102,7 @@ gcloud services enable dataform.googleapis.com
 gcloud services list --enabled | grep -E 'bigquery|dataform'
 ```
 
-### Step 3 : Créer le repository Dataform dans GCP
-**Optionnel** : Nécessaire uniquement si vous voulez utiliser l'interface web Dataform en plus de la CLI.
-
-1. Dans la console GCP, aller dans **Dataform** 
-2. Cliquer sur **"Create Repository"**
-3. Remplir le formulaire :
-   - **Repository ID** : `dataform-workshop-ff`
-   - **Region** : `europe-west1`
-4. Si c'est demandé, cliquer sur Tout autoriser
-5. Cliquer sur **"Create"**
-
-### Step 4 : Initialiser le projet et synchroniser avec GitHub
-#### **Initialiser le projet en local**
+### Step 3 : Initialiser le projet
 ```bash
 # Créer et entrer dans le dossier du projet
 mkdir dataform-workshop-ff
@@ -149,45 +145,7 @@ EOF
 npm install
 ```
 
-#### **Créer le repository GitHub et push (FACULTATIF)**
-**Uniquement si vous voulez travailler sur l'interface graphique Dataform GCP en plus**
-```bash
-# Initialiser Git
-git init
 
-# Faire le premier commit
-git branch -M main
-git add .
-git commit -m "Initialize Dataform project"
-```
-
-**Créer le repo sur GitHub :**
-1. Aller sur https://github.com/new
-2. **Repository name** : `dataform-workshop-ff`
-3. **Visibilité** : Public ou Private
-4. **NE PAS** cocher "Add README" ou ".gitignore" (déjà créés)
-5. Cliquer sur **Create repository**
-```bash
-
-# Ajouter le remote GitHub
-git remote add origin https://github.com/VOTRE_USERNAME/dataform-workshop-ff.git
-
-# Push sur GitHub
-git push -u origin main
-```
-
-#### **Connecter Dataform GCP à GitHub (FACULTATIF)**
-**Uniquement si vous voulez travailler sur l'interface graphique Dataform GCP en plus**
-
-1. Dans Dataform GCP, aller dans le repository `dataform-workshop-ff` (créé à la Step 3)
-2. Cliquer sur **Settings** (⚙️) → **Link Repository**
-3. Choisir **GitHub**
-4. **Authenticate with GitHub** : Autoriser GCP
-5. Sélectionner le repository `dataform-workshop-ff`
-6. **Default branch** : `main`
-7. Cliquer sur **Link**
-
-✅ **Synchronisation activée !** Vos commits GitHub seront automatiquement visibles dans l'interface Dataform GCP.
 
 
 
@@ -208,6 +166,17 @@ dataform-workshop-french-fragrance/
 └── includes/
 ```
 
+## Bonus : Utiliser l'interface Dataform GCP (démo)
+**Optionnel** : Juste pour voir l'interface, sans connexion au projet local
+
+1. Créer un repository Dataform dans GCP
+2. Créer un workspace
+3. Coder directement dans l'interface
+4. Compiler et exécuter
+5. Visualiser le DAG
+
+**Pas de synchronisation avec le projet local, c'est juste pour la démo !**
+
 ## 📖 Workshops
 
 ### Workshop 1 : Pipeline Full-Refresh (1h30)
@@ -219,3 +188,4 @@ dataform-workshop-french-fragrance/
 - **Scénario** : Analytics Temps Réel des Opérations (2 ans d'historique)
 - **Focus** : Optimisation coûts, performances, gros volumes
 - **Stratégie** : Incremental (mise à jour partielle)
+
