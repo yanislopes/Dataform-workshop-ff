@@ -108,10 +108,13 @@ gcloud services list --enabled | grep -E 'bigquery|dataform'
 mkdir dataform-workshop-ff
 cd dataform-workshop-ff
 
-# Créer la structure du hello_world
+# Créer la structure du hello_world 
 mkdir -p definitions/00_hello_world
-mkdir -p includes
+mkdir -p includes 
+```
+Le dossier **includes/** sert à stocker des fonctions JavaScript réutilisables dans les transformations Dataform. Il restera vide pour le Hello World.
 
+```bash
 # Créer dataform.json
 cat > dataform.json << 'EOF'
 {
@@ -228,7 +231,6 @@ config {
 **Explication :** 
 - Déclare la table source existante dans BigQuery (`raw_data.hello_world`)
 - Permet d'utiliser `ref()` pour référencer cette table
-- Tag `hello_world` pour exécuter tout le pipeline `hello_world` (pas obligatoire)
 
 #### **C. Créer la transformation stage**
 
@@ -257,6 +259,7 @@ FROM ${ref("raw_data", "hello_world")}
 - Crée une table temporaire dans `stage_congrat_data`
 - Ajoute les colonnes `origin` et `technical_date`
 - Référence la source via `${ref("raw_data", "hello_world")}`
+- Tag `hello_world` pour exécuter tout le pipeline `hello_world` (pas obligatoire)
 
 #### **D. Créer la transformation output**
 
@@ -309,49 +312,72 @@ dataform run --tags hello_world
 3. Cliquer sur **Preview**
 4. Vérifier que les données contiennent `Made in Paris, France` et `technical_date`
 
-## Bonus : Utiliser l'interface Dataform GCP (démo)
+## Bonus : Utiliser l'interface Dataform GCP
 **Optionnel** : Juste pour voir l'interface, sans connexion au projet local
 
-1. Créer un repository Dataform dans GCP
-2. Créer un workspace
-3. Coder directement dans l'interface
-4. Compiler et exécuter
-5. Visualiser le DAG
+### Différences avec le mode CLI
 
+L'interface Dataform GCP simplifie le setup :
+- ✅ **Pas de `package.json`** : Les dépendances Dataform sont gérées automatiquement par GCP
+- ✅ **`workflow_settings.yaml` au lieu de `dataform.json`** : Nouveau format depuis l'intégration à GCP
+- ✅ **Pas de credentials à configurer** : Authentification automatique via votre compte GCP
 
+### Étapes
 
+1. **Créer un repository Dataform**
+   - Console GCP → **Dataform**
+   - **Create Repository**
+   - Repository ID : `repo-name`
+   - Region : `europe-west1`
 
+2. **Créer un workspace**
+   - Cliquer sur **Create Development Workspace**
+   - Workspace ID : `workspace-name`
 
+3. **Initialiser l'espace de travail**
+   - Cliquer sur **Initialize workspace**
+   - GCP crée automatiquement :
+     - `workflow_settings.yaml` (équivalent de `dataform.json`)
+     - `definitions/`
+     - `includes/`
+     - `.gitignore`
 
-
-
-
-## 📚 Structure du projet
+4. **Configurer workflow_settings.yaml**
+   
+   Éditer le fichier avec vos paramètres :
+```yaml
+defaultProject: VOTRE_PROJECT_ID
+defaultDataset: french_fragrance
+defaultAssertionDataset: dataform_assertions
+defaultLocation: EU
+dataformCoreVersion: 3.0.26
 ```
-dataform-workshop-ff/
-├── README.md
-├── LICENSE (MIT)
-├── .gitignore
-├── dataform.json           
-├── package.json 
-├── definitions/
-│   ├── 00_hello_world/
-│   ├── 01_workshop_full_refresh/
-│   └── 02_workshop_incremental/
-└── includes/
-```
+**dataformCoreVersion** spécifie la version de **@dataform/core** à utiliser
 
-**Pas de synchronisation avec le projet local, c'est juste pour la démo !**
+5. **Coder dans l'interface**
+   - Créer vos fichiers `.sqlx` directement dans l'éditeur web
+   - copier les codes de hello_world fait via le CLI
 
-## 📖 Workshops
+6. **Visualiser le DAG**
+   - Cliquer sur **Compiled graph**
+   - Voir le graphe de dépendances entre les tables
 
-### Workshop 1 : Pipeline Full-Refresh (1h30)
-- **Scénario** : Reporting Hebdomadaire des Ventes
-- **Focus** : Fondamentaux Dataform, architecture en layers
-- **Stratégie** : Full-refresh (tables recalculées complètement)
+7. **Exécuter**
+   - Cliquer sur **Start execution**
+   - Choisir notre tag
+   - **Execute**
 
-### Workshop 2 : Pipeline Incremental (1h30)
-- **Scénario** : Analytics Temps Réel des Opérations (2 ans d'historique)
-- **Focus** : Optimisation coûts, performances, gros volumes
-- **Stratégie** : Incremental (mise à jour partielle)
+8. **Versionning**
+**En mode CLI** : Le versioning se gère via votre propre système (Git tags, CI/CD, etc.). 
 
+**En mode interface GCP** : On peut connecter un repository Git à Dataform pour utiliser la feature Release (avec son scheduler intégré).
+
+### Avantages de l'interface
+
+- Setup ultra-rapide (pas d'installation locale)
+- Visualisation du DAG intégrée
+- Exécution directe dans GCP
+- Logs et monitoring intégrés
+- Gestion des releases 
+
+**Idéal pour les démos et le prototypage rapide !**
