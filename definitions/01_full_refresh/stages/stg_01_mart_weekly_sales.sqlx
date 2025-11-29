@@ -1,0 +1,57 @@
+config {
+  type: "table",
+  database: constants.PROJECT_ID,
+  schema: "stage_french_fragrance",
+  description: "Agrégation hebdomadaire des ventes par magasin, produit et catégorie",
+  tags: ["datamart"]
+}
+
+SELECT 
+  -- Unique Key
+  ${constants.generateUniqueKey([
+    "CAST(sale_year AS STRING)",
+    "CAST(sale_week AS STRING)",
+    "store_name",
+    "product_name",
+    "collection",
+    "category"
+  ])} AS key,
+
+  -- Technical Header
+  STRUCT(
+    MAX(source_technical_operation) AS sourceOperation,
+    '01_full_refresh' AS technicalFlowIdentifier,
+    MAX(source_technical_date) AS sourceDate,
+    MAX(source_technical_flow_identifier) AS sourceFlowIdentifier,
+    CURRENT_TIMESTAMP() AS technicalDate,
+    'INSERT' AS technicalOperation
+  ) AS technicalHeader,
+  
+  -- Dimensions temps
+  sale_year,
+  sale_week,
+  
+  -- Dimensions magasin
+  store_name,
+  MAX(city) AS city,
+  MAX(region) AS region,
+  
+  -- Dimensions produit
+  product_name,
+  collection,
+  category,
+  
+  -- Métriques
+  COUNT(DISTINCT sale_id) AS nb_tickets,
+  SUM(quantity) AS total_quantity,
+  SUM(line_amount_eur) AS total_sales_eur,
+  ROUND(AVG(line_amount_eur), 2) AS avg_line_amount_eur
+
+FROM ${ref("stage_french_fragrance", "stg_01_sales_joined")}
+GROUP BY 
+  sale_year,
+  sale_week,
+  store_name,
+  product_name,
+  collection,
+  category

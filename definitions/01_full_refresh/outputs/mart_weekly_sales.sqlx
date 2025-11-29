@@ -1,0 +1,15 @@
+config {
+  type: "table",
+  database: constants.PROJECT_ID,
+  schema: "mart_french_fragrance",
+  description: "Datamart hebdomadaire des ventes pour dashboard",
+  tags: ["datamart"],
+  dependencies: [
+    "stg_01_mart_weekly_sales",
+    "stg_01_mart_weekly_sales_assertion_not_null",
+    "stg_01_mart_weekly_sales_assertion_unique_key"
+  ]
+}
+
+SELECT *
+FROM ${ref("stage_french_fragrance", "stg_01_mart_weekly_sales")}
