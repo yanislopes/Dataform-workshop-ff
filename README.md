@@ -304,6 +304,8 @@ dataform compile
 ```bash
 # Exécuter uniquement le tag hello_world
 dataform run --tags hello_world
+# Équivalent (mais pas nécessaire) :
+dataform run --tags hello_world --credentials .df-credentials.json
 ```
 
 #### **C. Vérifier les résultats dans BigQuery**
@@ -318,9 +320,9 @@ dataform run --tags hello_world
 ### Différences avec le mode CLI
 
 L'interface Dataform GCP simplifie le setup :
-- ✅ **Pas de `package.json`** : Les dépendances Dataform sont gérées automatiquement par GCP
-- ✅ **`workflow_settings.yaml` au lieu de `dataform.json`** : Nouveau format depuis l'intégration à GCP
-- ✅ **Pas de credentials à configurer** : Authentification automatique via votre compte GCP
+- **Pas de `package.json`** : Les dépendances Dataform sont gérées automatiquement par GCP
+- **`workflow_settings.yaml` au lieu de `dataform.json`** : Nouveau format depuis l'intégration à GCP
+- **Pas de credentials à configurer** : Authentification automatique via votre compte GCP
 
 ### Étapes
 
