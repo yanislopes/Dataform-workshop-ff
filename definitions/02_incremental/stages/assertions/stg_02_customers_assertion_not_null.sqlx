@@ -1,0 +1,16 @@
+config {
+  type: "assertion",
+  database: constants.PROJECT_ID,
+  schema: "stage_french_fragrance",
+  description: "Vérifie qu'il n'y a pas de valeurs nulles dans les colonnes clés",
+  tags: ["incremental"]
+}
+
+SELECT *
+FROM ${ref("stage_french_fragrance", "stg_02_customers_prepared")}
+WHERE
+  key IS NULL
+  OR customer_id IS NULL
+  OR email IS NULL
+  OR status IS NULL
+  OR country IS NULL

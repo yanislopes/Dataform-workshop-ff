@@ -19,13 +19,13 @@ SELECT
 
   -- Technical Header
   STRUCT(
-    MAX(source_technical_operation) AS sourceOperation,
-    '01_full_refresh' AS technicalFlowIdentifier,
-    MAX(source_technical_date) AS sourceDate,
-    MAX(source_technical_flow_identifier) AS sourceFlowIdentifier,
-    CURRENT_TIMESTAMP() AS technicalDate,
-    'INSERT' AS technicalOperation
-  ) AS technicalHeader,
+    MAX(source_technical_operation) AS source_operation,
+    '01_full_refresh' AS technical_flow_identifier,
+    MAX(source_technical_date) AS source_date,
+    MAX(source_technical_flow_identifier) AS source_flow_identifier,
+    CURRENT_TIMESTAMP() AS technical_date,
+    'INSERT' AS technical_operation
+  ) AS technical_header,
   
   -- Dimensions temps
   sale_year,
@@ -40,12 +40,11 @@ SELECT
   product_name,
   collection,
   category,
-  
+
   -- Métriques
   COUNT(DISTINCT sale_id) AS nb_tickets,
   SUM(quantity) AS total_quantity,
-  SUM(line_amount_eur) AS total_sales_eur,
-  ROUND(AVG(line_amount_eur), 2) AS avg_line_amount_eur
+  SUM(line_amount_eur) AS total_sales_eur
 
 FROM ${ref("stage_french_fragrance", "stg_01_sales_joined")}
 GROUP BY 

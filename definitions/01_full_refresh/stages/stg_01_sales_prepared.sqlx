@@ -8,9 +8,9 @@ config {
 
 SELECT 
   -- Technical fields (from source)
-  s.technicalDate AS source_technical_date,
-  s.technicalOperation AS source_technical_operation,
-  s.technicalFlowIdentifier AS source_technical_flow_identifier,
+  s.technical_date AS source_technical_date,
+  s.technical_operation AS source_technical_operation,
+  s.technical_flow_identifier AS source_technical_flow_identifier,
 
   -- Business fields
   s.sale_id,

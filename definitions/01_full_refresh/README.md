@@ -20,13 +20,6 @@ Clé unique avec `TO_HEX(SHA256())` = Créer une clé unique hashée
 
 ---
 
-## Prérequis
-
-- Avoir terminé le **Setup & Hello World**
-- Dataset `raw_data` créé dans BigQuery
-
----
-
 ## Architecture du pipeline
 ```
   raw_data.sales    raw_data.products    raw_data.stores
@@ -59,7 +52,7 @@ stg_01_sales_prepared  stg_01_products_prepared  stg_01_stores_prepared
 **Fact** Événements/transactions = Volume élevé, mesures, granularité fine (`sales`)
 **Dimension** Référentiels descriptifs = relativement stable (`products`, `stores`)
 
-Les champs techniques (`technicalDate`, `technicalOperation`, `technicalFlowIdentifier`) sont ajoutés uniquement sur les **tables de faits**.
+Les champs techniques (`technical_date`, `technical_operation`, `technical_flow_identifier`) sont ajoutés uniquement sur les **tables de faits**.
 
 #### Pourquoi JSONL plutôt que CSV ?
 
@@ -78,16 +71,16 @@ Longueur fixe = Toujours 64 caractères, stockage prévisible
 Pas de collision = Évite les conflits si un séparateur existe dans les données
 Distribution uniforme = Valeurs pseudo-aléatoires, bien réparties, améliore performance
 
-#### Intérêt du `technicalHeader`
+#### Intérêt du `technical_header`
 
-Le `technicalHeader` est un champ `STRUCT` qui trace la provenance des données :
+Le `technical_header` est un champ `STRUCT` qui trace la provenance des données :
 
-- `sourceOperation` = Opération source (INSERT, UPDATE)
-- `technicalFlowIdentifier` = Nom du flux qui a écrit la donnée
-- `sourceDate` = Date d'ingestion de la source
-- `sourceFlowIdentifier` = Nom du flux d'ingestion source
-- `technicalDate` = Timestamp d'exécution du pipeline
-- `technicalOperation` = Opération effectuée par notre flux (INSERT)
+- `source_operation` = Opération source (INSERT, UPDATE)
+- `technical_flow_identifier` = Nom du flux qui a écrit la donnée
+- `source_date` = Date d'ingestion de la source
+- `source_flow_identifier` = Nom du flux d'ingestion source
+- `technical_date` = Timestamp d'exécution du pipeline
+- `technical_operation` = Opération effectuée par notre flux (INSERT)
 
 **Utilité** : En cas de bug, permet de retrouver quel flux et quelle source ont généré la donnée.
 
@@ -191,6 +184,7 @@ Créer les fichiers suivants :
 ```bash
 # Compiler
 dataform compile
+dataform compile --json
 
 # Dry-run (voir le SQL sans exécuter)
 dataform run --tags datamart --dry-run

@@ -1,0 +1,54 @@
+config {
+  type: "table",
+  database: constants.PROJECT_ID,
+  schema: "stage_french_fragrance",
+  bigquery: {
+    partitionBy: "DATE(technical_date)",
+    clusterBy: ["status"]
+  },
+  description: "Clients préparés avec key. Partitionné et clusterisé pour FinOps",
+  tags: ["incremental"]
+}
+
+pre_operations {
+  ${when(!incremental(),
+    `DECLARE incremental_timestamp TIMESTAMP DEFAULT TIMESTAMP('1900-01-01')`,
+    constants.getIncrementalTimestamp("datawarehouse", "customers_history")
+  )}
+}
+
+SELECT
+  -- Key
+  ${constants.generateUniqueKey([
+    "CAST(customer_id AS STRING)",
+    "country"
+  ])} AS key,
+
+  CURRENT_TIMESTAMP() AS technical_date,
+
+  -- Technical Header
+  STRUCT(
+    c.technical_operation AS source_operation,
+    '02_incremental' AS technical_flow_identifier,
+    c.technical_date AS source_date,
+    c.technical_flow_identifier AS source_flow_identifier,
+    'UPSERT' AS technical_operation
+  ) AS technical_header,
+
+  -- Business fields
+  c.customer_id,
+  c.email,
+  c.first_name,
+  c.last_name,
+  c.birth_date,
+  c.country,
+  c.city,
+  c.registration_date,
+  c.updated_at,
+  c.status
+
+FROM ${ref("raw_data", "customers")} c
+WHERE c.technical_date > incremental_timestamp
+${when(dataform.projectConfig.vars.filterCountry,
+  `AND c.country = '${dataform.projectConfig.vars.filterCountry}'`
+)}

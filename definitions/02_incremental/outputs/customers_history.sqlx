@@ -1,0 +1,39 @@
+config {
+  type: "incremental",
+  database: constants.PROJECT_ID,
+  schema: "datawarehouse",
+  uniqueKey: ["key"],
+  bigquery: {
+    partitionBy: "DATE(technical_date)",
+    clusterBy: ["country", "city", "status"]
+  },
+  description: "Historique des clients avec MERGE incrémental",
+  tags: ["incremental"],
+  dependencies: [
+    "stg_02_customers_prepared",
+    "stg_02_customers_assertion_not_null",
+    "stg_02_customers_assertion_unique_key"
+  ]
+}
+
+pre_operations {
+  ${when(!incremental(),
+    `DECLARE incremental_timestamp TIMESTAMP DEFAULT TIMESTAMP('1900-01-01')`,
+    constants.getIncrementalTimestamp("datawarehouse", "customers_history")
+  )}
+}
+
+SELECT *
+FROM ${ref("stage_french_fragrance", "stg_02_customers_prepared")}
+${when(incremental(),
+  `-- Mode incremental : on prend tout (y compris to_delete pour les mettre à jour)`,
+  `WHERE status != 'to_delete' -- Mode full refresh / init : on filtre directement les to_delete`
+)}
+
+post_operations {
+  ${when(incremental(),
+    `DELETE FROM ${self()} 
+     WHERE status = 'to_delete' 
+     AND DATE(technical_date) >= DATE(incremental_timestamp)`
+  )}
+}
